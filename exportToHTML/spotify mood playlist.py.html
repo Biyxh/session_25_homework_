@@ -1,0 +1,131 @@
+<html>
+<head>
+<title>spotify mood playlist.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+.s3 { color: #6a8759;}
+.s4 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+spotify mood playlist.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">spotipy </span><span class="s0">as </span><span class="s1">spotipy</span>
+
+<span class="s1">spotipy</span>
+
+<span class="s0">import </span><span class="s1">os</span>
+<span class="s0">import </span><span class="s1">sys</span>
+<span class="s0">import </span><span class="s1">json</span>
+<span class="s0">import </span><span class="s1">spotipy</span>
+<span class="s0">import </span><span class="s1">webbrowser</span>
+<span class="s0">import </span><span class="s1">spotipy.util </span><span class="s0">as </span><span class="s1">util</span>
+<span class="s0">from </span><span class="s1">json.decoder </span><span class="s0">import </span><span class="s1">JSONDecodeError</span>
+
+<span class="s1">username = sys.argv[</span><span class="s2">1</span><span class="s1">]</span>
+<span class="s1">scope = </span><span class="s3">'user-read-private user-read-playback-state user-modify-playback-state'</span>
+
+<span class="s0">try</span><span class="s1">:</span>
+    <span class="s1">token = util.prompt_for_user_token(username</span><span class="s0">, </span><span class="s1">scope)</span>
+<span class="s0">except </span><span class="s1">(AttributeError</span><span class="s0">, </span><span class="s1">JSONDecodeError):</span>
+    <span class="s1">os.remove(</span><span class="s3">f&quot;.cache-</span><span class="s0">{</span><span class="s1">username</span><span class="s0">}</span><span class="s3">&quot;</span><span class="s1">)</span>
+    <span class="s1">token = util.prompt_for_user_token(username</span><span class="s0">, </span><span class="s1">scope)</span>
+
+    <span class="s1">spotifyObject = spotipy.Spotify(auth=token)</span>
+
+<span class="s1">devices = spotifyObject.devices()</span>
+<span class="s1">print(json.dumps(devices</span><span class="s0">, </span><span class="s1">sort_keys=</span><span class="s0">True, </span><span class="s1">indent=</span><span class="s2">4</span><span class="s1">))</span>
+<span class="s1">deviceID = devices[</span><span class="s3">'devices'</span><span class="s1">][</span><span class="s2">0</span><span class="s1">][</span><span class="s3">'id'</span><span class="s1">]</span>
+
+<span class="s4">#testing #tutorial #javascript #beginners</span>
+<span class="s4"># Get track information</span>
+<span class="s1">track = spotifyObject.current_user_playing_track()</span>
+<span class="s1">print(json.dumps(track</span><span class="s0">, </span><span class="s1">sort_keys=</span><span class="s0">True, </span><span class="s1">indent=</span><span class="s2">4</span><span class="s1">))</span>
+<span class="s1">print()</span>
+<span class="s1">artist = track[</span><span class="s3">'item'</span><span class="s1">][</span><span class="s3">'artists'</span><span class="s1">][</span><span class="s2">0</span><span class="s1">][</span><span class="s3">'name'</span><span class="s1">]</span>
+<span class="s1">track = track[</span><span class="s3">'item'</span><span class="s1">][</span><span class="s3">'name'</span><span class="s1">]</span>
+
+<span class="s0">if </span><span class="s1">artist !=</span><span class="s3">&quot;&quot;</span><span class="s1">:</span>
+    <span class="s1">print(</span><span class="s3">&quot;Currently playing &quot; </span><span class="s1">+ artist + </span><span class="s3">&quot; - &quot; </span><span class="s1">+ track)</span>
+
+<span class="s4"># User information</span>
+<span class="s1">user = spotifyObject.current_user()</span>
+<span class="s1">displayName = user[</span><span class="s3">'display_name'</span><span class="s1">]</span>
+<span class="s1">follower = user[</span><span class="s3">'followers'</span><span class="s1">][</span><span class="s3">'total'</span><span class="s1">]</span>
+
+<span class="s0">while True</span><span class="s1">:</span>
+
+    <span class="s1">print()</span>
+    <span class="s1">print(</span><span class="s3">&quot;&gt;&gt;&gt; Welcome to Spotify &quot; </span><span class="s1">+ displayName + </span><span class="s3">&quot; :)&quot;</span><span class="s1">)</span>
+    <span class="s1">print(</span><span class="s3">&quot;&gt;&gt;&gt; You have &quot; </span><span class="s1">+ str(follower) + </span><span class="s3">&quot; followers.&quot;</span><span class="s1">)</span>
+    <span class="s1">print()</span>
+    <span class="s1">print(</span><span class="s3">&quot;0 - Search for an artist&quot;</span><span class="s1">)</span>
+    <span class="s1">print(</span><span class="s3">&quot;1 - exit&quot;</span><span class="s1">)</span>
+    <span class="s1">print()</span>
+    <span class="s1">choice = input(</span><span class="s3">&quot;Enter your choice: &quot;</span><span class="s1">)</span>
+
+<span class="s4"># Search for artist</span>
+<span class="s0">if </span><span class="s1">choice == </span><span class="s3">&quot;0&quot;</span><span class="s1">:</span>
+    <span class="s1">print()</span>
+    <span class="s1">searchQuery = input(</span><span class="s3">&quot;Ok, what's their name?:&quot;</span><span class="s1">)</span>
+    <span class="s1">print()</span>
+    
+
+   <span class="s1">searchResults = spotifyObject.search(searchQuery</span><span class="s0">,</span><span class="s2">1</span><span class="s0">,</span><span class="s2">0</span><span class="s0">,</span><span class="s3">&quot;artist&quot;</span><span class="s1">)</span>
+
+<span class="s4"># Print artist details</span>
+<span class="s1">artist = searchResults[</span><span class="s3">'artists'</span><span class="s1">][</span><span class="s3">'items'</span><span class="s1">][</span><span class="s2">0</span><span class="s1">]</span>
+<span class="s1">print(artist[</span><span class="s3">'name'</span><span class="s1">])</span>
+<span class="s1">print(str(artist[</span><span class="s3">'followers'</span><span class="s1">][</span><span class="s3">'total'</span><span class="s1">]) + </span><span class="s3">&quot; followers&quot;</span><span class="s1">)</span>
+<span class="s1">print(artist[</span><span class="s3">'genres'</span><span class="s1">][</span><span class="s2">0</span><span class="s1">])</span>
+<span class="s1">print()</span>
+<span class="s1">webbrowser.open(artist[</span><span class="s3">'images'</span><span class="s1">][</span><span class="s2">0</span><span class="s1">][</span><span class="s3">'url'</span><span class="s1">])</span>
+<span class="s1">artistID = artist[</span><span class="s3">'id'</span><span class="s1">]</span>
+
+<span class="s1">trackURIs = []</span>
+<span class="s1">trackArt = []</span>
+<span class="s1">z = </span><span class="s2">0</span>
+
+<span class="s4"># Extract data from album</span>
+<span class="s1">albumResults = spotifyObject.artist_albums(artistID)</span>
+<span class="s1">albumResults = albumResults[</span><span class="s3">'items'</span><span class="s1">]</span>
+
+<span class="s0">for </span><span class="s1">item </span><span class="s0">in </span><span class="s1">albumResults:</span>
+    <span class="s1">print(</span><span class="s3">&quot;ALBUM: &quot; </span><span class="s1">+ item[</span><span class="s3">'name'</span><span class="s1">])</span>
+    <span class="s1">albumID = item[</span><span class="s3">'id'</span><span class="s1">]</span>
+    <span class="s1">albumArt = item[</span><span class="s3">'images'</span><span class="s1">][</span><span class="s2">0</span><span class="s1">][</span><span class="s3">'url'</span><span class="s1">]</span>
+
+    <span class="s4"># Extract track data</span>
+    <span class="s1">trackResults = spotifyObject.album_tracks(albumID)</span>
+    <span class="s1">trackResults = trackResults[</span><span class="s3">'items'</span><span class="s1">]</span>
+
+    <span class="s0">for </span><span class="s1">item </span><span class="s0">in </span><span class="s1">trackResults:</span>
+        <span class="s1">print(str(z) + </span><span class="s3">&quot;: &quot; </span><span class="s1">+ item[</span><span class="s3">'name'</span><span class="s1">])</span>
+        <span class="s1">trackURIs.append(item[</span><span class="s3">'uri'</span><span class="s1">])</span>
+        <span class="s1">trackArt.append(albumArt)</span>
+        <span class="s1">z += </span><span class="s2">1</span>
+    <span class="s1">print()</span>
+
+    <span class="s4"># See album art</span>
+    <span class="s0">while True</span><span class="s1">:</span>
+        <span class="s1">songSelection = input(</span><span class="s3">&quot;Enter a song number to see the album art: &quot;</span><span class="s1">)</span>
+        <span class="s0">if </span><span class="s1">songSelection == </span><span class="s3">&quot;x&quot;</span><span class="s1">:</span>
+            <span class="s0">break</span>
+        <span class="s1">trackSelectionList = []</span>
+        <span class="s1">trackSelectionList.append(trackURIs[int(songSelection)])</span>
+        <span class="s1">spotifyObject.start_playback(deviceID</span><span class="s0">, None, </span><span class="s1">trackSelectionList)</span>
+        <span class="s1">webbrowser.open(trackArt[int(songSelection)])</span>
+
+        <span class="s4"># End program</span>
+        <span class="s0">if </span><span class="s1">choice == </span><span class="s3">&quot;1&quot;</span><span class="s1">:</span>
+            <span class="s0">break</span>
+
+</pre>
+</body>
+</html>
